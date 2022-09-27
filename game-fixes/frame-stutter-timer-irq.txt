@@ -1,0 +1,10 @@
+/*
+allow vblank irqs to run during timer service routine
+- long timer irq could eat up entire vblank time afterward
+*/
+
+
+
+org 0x0, 0x0050
+	ei			; give vblank irq priority during timer interrupt
+	jp 0x0324

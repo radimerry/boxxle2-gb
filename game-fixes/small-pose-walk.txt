@@ -1,0 +1,30 @@
+/*
+swap left + right sprites in small mode to match large mode
+*/
+
+
+
+org 0x1, REGION2( 0x6c85, 0x6c55 )
+	.incbin "small-walk-right-mask.bin"
+	.incbin "small-walk-left-mask.bin"
+	.skip 0x10
+	.skip 0x10
+
+	.incbin "small-push-right-mask.bin"
+	.incbin "small-push-left-mask.bin"
+	.skip 0x10
+	.skip 0x10
+
+
+
+
+org 0x1, REGION2( 0x6ed9, 0x6ea9 )
+	.incbin "small-walk-right-gfx.bin"
+	.incbin "small-walk-left-gfx.bin"
+	.skip 0x29
+	.skip 0x29
+
+	.incbin "small-push-right-gfx.bin"
+	.incbin "small-push-left-gfx.bin"
+	.skip 0x2a
+	.skip 0x2a

@@ -1,0 +1,16 @@
+.relativeinclude on
+
+
+	.include "frame-stutter.txt"
+	.include "irq-misfire.txt"
+	.include "joypad-limiter.txt"
+	.include "menu-flicker.txt"
+	.include "player-pose-reset.txt"
+	.include "small-pose-sleep.txt"
+	.include "small-pose-walk.txt"
+	.include "title-flicker.txt"
+	.include "walk-slow-stutter.txt"
+	.include "zoom-player-reset.txt"
+
+
+.relativeinclude off

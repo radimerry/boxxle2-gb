@@ -1,0 +1,92 @@
+/*
+joypad sends 1 button press, then must wait for button to release
+*/
+
+
+
+.include "joypad-limiter-create-cursor.txt"
+.include "joypad-limiter-stage-select.txt"
+.include "joypad-limiter-zoom-switch.txt"
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+
+; ###########################################################
+
+
+
+
+org 0x0, REGION2( 0x27f8, 0x25cb )
+	ldh a, (0x8d)		; save old input
+	ldh (0x8e), a		; - [ff8e = input masking, not used]
+	nop :: nop
+
+
+samepc REGION2( 0x27fe, 0x25d1 )
+
+
+
+
+; ##################################################################
+
+
+
+
+org 0x0, REGION2( 0x303f, 0x2e12 )
+	jr REGION2( 0x3024, 0x2df7 )	; dupe code
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@joypad_block:
+	ld a, (0xc11d+@VAR_OFFSET)	; if (joypad blocking)
+	or a
+	ret z
+
+
+	ldh a, (0x8d)			; if (button not pressed)
+	or a
+	jr nz, @@reset
+
+
+	ld (0xc11d+@VAR_OFFSET), a	; unblock joypad
+
+
+
+@@reset:
+	xor a				; ignore joypad
+	ldh (0x8d), a
+
+	ret
+	
+
+
+	nop :: nop :: nop
+	nop :: nop
+
+
+samepc REGION2( 0x3057, 0x2e2a )
+
+
+
+
+; #################################################################
+
+
+
+
+org 0x0, 0x022e
+	call REGION2( 0x27d5, 0x25a8 )		; read joypad
+	call @joypad_block
+
+
+samepc 0x0234

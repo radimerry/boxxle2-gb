@@ -1,0 +1,55 @@
+/*
+wait for frame done by checking vblank flag to avoid mis-timing
+- game could sometimes run too fast or slow from bad irqs
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x085a
+	call bgmap_erase_tile	; add vram blocking
+
+
+
+
+; ##########################################################
+
+
+
+
+org 0x0, 0x02ce
+
+@frame_done:
+	ldh a, (0x93)		; wait for vblank
+	or a
+	jr z, @frame_done
+
+
+	nop			; halt = unreliable; could be vblank or timer
+
+
+samepc 0x02d4
+
+
+
+
+; ##########################################################
+
+
+
+
+org 0x0, 0x0795
+	call 0x0a4e		; small zoom = wait 1 frame
+
+
+
+org 0x0, 0x079f
+	call 0x0a4e		; small zoom = wait 1 frame
+
+
+
+org 0x0, 0x0662
+	call 0x0a4e		; stage clear = wait 1 frame

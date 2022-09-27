@@ -1,0 +1,47 @@
+/*
+redraw player sprite after changing zoom mode to match old mode
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x0cdc
+	ld a, (0xc118+@VAR_OFFSET)
+
+	cp a, 0x10		; 0x = [large] walk
+	jr c, @walk_sprite
+
+	cp a, 0x20		; 1x = [large] push
+	jr c, @push_sprite
+
+	cp a, 0x40		; 2x-3x = [small] walk
+	jr c, @walk_sprite
+
+				; 4x-5x = [small] push
+
+
+
+@push_sprite:
+	ld a, 0x01
+	jr @save_sprite
+
+
+
+@walk_sprite:
+	xor a
+
+
+
+@save_sprite:
+	ld (0xc0f0+@VAR_OFFSET), a	; save push state
+
+
+
+	call 0x0e82		; draw player sprite
+	jr 0x0d11
+
+
+freepc 0x0d11

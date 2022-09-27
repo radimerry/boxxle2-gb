@@ -1,0 +1,24 @@
+/*
+holding select will change zoom modes 1-time
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x03d3
+	ldh a, (0x8d)			; if (select button), change zoom mode 
+	and a, 0x04
+	jr z, 0x03f1
+
+
+	ld (0xc11d+@VAR_OFFSET), a	; start joypad blocking
+
+
+	jr 0x03e0
+	nop :: nop
+
+
+samepc 0x03e0

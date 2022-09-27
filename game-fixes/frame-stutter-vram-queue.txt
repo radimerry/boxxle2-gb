@@ -1,0 +1,52 @@
+/*
+add items to vblank queue to avoid 1 frame of vblank wait delay
+- game would force wait to clear upload data when it's ready
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x155c
+	ret			; avoid oam vram blocking
+
+
+	nop :: nop :: nop
+	nop :: nop :: nop
+
+
+samepc 0x1563
+
+
+
+
+; ################################################################
+
+
+
+
+org 0x0, REGION2( 0x28e9, 0x26bc )
+	ret			; avoid bgmap vram blocking
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+logic_start_ei:
+	ldh (0x95), a
+
+
+stage_clear_ei:
+	xor a
+	ldh (0x0f), a
+
+	reti
+
+
+samepc REGION2( 0x28f0, 0x26c3 )

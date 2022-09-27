@@ -1,0 +1,31 @@
+/*
+holding select will change create cursor type 1-time
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x1545
+
+
+@create_mode_cursor:
+	ldh a, (0x8e)			; if (button being held), don't repeat button
+	or a
+	ret nz
+
+
+	ld a, (0xc0fd+@VAR_OFFSET)	; change cursor
+	inc a
+	and a, 0x03
+	ld (0xc0fd+@VAR_OFFSET), a
+
+
+	call 0x1563
+	nop :: nop
+
+
+samepc 0x1557
+

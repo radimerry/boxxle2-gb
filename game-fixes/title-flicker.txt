@@ -1,0 +1,61 @@
+/*
+keep screen on during title screen vram upload to stop flicker
+*/
+
+
+
+.if REGION == "USA"
+
+
+org 0x0, 0x179f
+	ld a, (0xc19a)		; if (falling animation not done), exit
+	or a
+	ret nz
+
+
+	ld hl, 0x00d1		; copy tilemap
+	ld de, 0x9827
+	ld b, 0x05
+
+
+
+@title_loop:
+	ld c, 0x05
+
+
+
+@title_copy:
+	ldh a, (0x41)		; wait vh-blank
+	and a, 0x02
+	jr nz, @title_copy
+
+
+	ldi a, (hl)
+	ld (de), a
+
+	inc e
+	dec c
+
+	jr nz, @title_copy
+
+
+
+	ld a, e			; next tile row
+	add a, 0x1b
+	ld e, a
+
+	dec b
+	jr nz, @title_loop
+
+
+
+	jr 0x17cf
+
+
+	; 12 free
+
+
+warnpc 0x17cf
+
+
+.endif

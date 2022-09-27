@@ -1,0 +1,91 @@
+/*
+stop micro-stutter pauses
+*/
+
+
+
+.include "frame-stutter-oam-dma.txt"
+.include "frame-stutter-timer-irq.txt"
+.include "frame-stutter-vblank-wait.txt"
+.include "frame-stutter-vram-queue.txt"
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+
+; ###########################################################
+
+
+
+
+org 0x0, 0x15b6
+
+
+; manual frame delay routine @ 15b6 = not needed, replaced
+; - c11d = only used here
+
+
+bgmap_erase_tile:
+	push hl
+	ld hl, 0xc111+@VAR_OFFSET
+
+
+
+	ld a, (0xc0f4+@VAR_OFFSET)	; if (old block != new block)
+	cp (hl)
+	jr nz, @wait_copy
+
+
+
+	ld a, (0xc0f5+@VAR_OFFSET)
+	inc hl
+	cp (hl)
+	jr z, @resume
+
+
+
+
+@wait_copy:
+	ld a, (0xc0ab+@VAR_OFFSET)	; wait for old transfer to finish
+	or a
+	jr nz, @wait_copy
+
+
+
+
+@resume:
+	pop hl
+
+
+	ld a, (0xc0f6+@VAR_OFFSET)
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+mode_oam_clear:
+	call 0x1557		; reset oam
+
+
+	ld a, 0x01		; switching modes = joypad block
+	ld (0xc11d+@VAR_OFFSET), a
+
+	ret
+
+
+
+	nop :: nop :: nop
+	nop :: nop :: nop
+	nop :: nop :: nop
+	nop
+
+
+samepc 0x15e5

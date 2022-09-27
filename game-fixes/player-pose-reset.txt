@@ -1,0 +1,364 @@
+/*
+redraw player to initial state after stage clear or reset
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@JMP_DEST equ REGION2( 0x2482, 0x2232 )		; screen off
+
+
+
+org 0x0, REGION2( 0x25aa, 0x235a )
+
+	dh @menu_start
+	dh @menu_main
+	dh @menu_create
+
+	dh @menu_retry
+	dh @menu_next
+	dh @menu_final
+
+
+
+
+; #########################################################
+
+
+
+
+org 0x0, REGION2( 0x2497, 0x2247 )
+
+
+@menu_start:
+	ld a, 0x20		; show main menu
+
+	jr @mode_init
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_main:
+	jr nz, @@passkey_01
+
+
+
+@@play_00:
+	call 0x0e5f
+
+
+	ld a, (0xc353+@VAR_OFFSET)	; if (!new game), then skip intro  [select level]
+	jr nc, @mode_init
+
+
+	ld a, 0x03
+	jr @mode_init
+
+
+
+
+@@passkey_01:
+	dec a
+	jr nz, @@create_02
+
+
+	ld a, 0x05
+	jr @mode_init
+
+
+
+
+@@create_02:
+	ld a, 0x30
+;;	jr @mode_init
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@mode_init:
+	ld (0xc34e+@VAR_OFFSET), a
+
+
+
+	ld a, 0x01
+	ld (0xc13d+@VAR_OFFSET), a
+
+
+	xor a
+	ld (0xc13f+@VAR_OFFSET), a
+
+
+	ld hl, 0xc350+@VAR_OFFSET
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+
+
+
+
+@mode_start:
+	ld hl, 0xc339+@VAR_OFFSET
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+
+
+	jp @JMP_DEST
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_create:
+	push af
+
+
+	ld a, 0x03		; 00
+	jr z, @@init
+
+	dec a			; 01-02
+
+
+
+@@init:
+	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc351+@VAR_OFFSET), a
+	ld (0xc13d+@VAR_OFFSET), a
+
+
+	pop af
+	jr nz, @@option_01
+
+
+
+@@option_00:
+	xor a
+	jr @mode_start
+
+
+
+
+@@option_01:
+	dec a
+	jr nz, @@option_02
+
+
+	ld a, 0x08
+	jr @@create_done
+
+
+
+
+@@option_02:
+	ld a, 0x10
+;;	jr @@create_done
+
+
+
+
+@@create_done:
+	ld (0xc0fe+@VAR_OFFSET), a
+
+
+	jp @JMP_DEST
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_retry:
+	jr nz, @stage_select
+
+
+
+
+@@retry:
+	ld (0xc140+@VAR_OFFSET), a
+
+
+	ld (0xc0f8+@VAR_OFFSET), a	; player frame
+	ld (0xc116+@VAR_OFFSET), a	; player direction
+	ld (0xc118+@VAR_OFFSET), a	; player pose
+
+
+	inc a
+	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc13d+@VAR_OFFSET), a
+	ld (0xc11a+@VAR_OFFSET), a
+
+
+	jp @JMP_DEST
+
+
+
+
+@stage_select:
+	ld a, 0x03
+	ld (0xc34e+@VAR_OFFSET), a
+
+	jr @stage_reset
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_next:
+	jr nz, @stage_select
+
+
+	ld (0xc34e+@VAR_OFFSET), a
+
+
+
+	ld a, (0xc109+@VAR_OFFSET)		; ??
+	or a
+	jr nz, @@next2
+
+
+
+	ld a, (0xc352+@VAR_OFFSET)		; bump stage #
+	inc a
+	cp a, 0x0a
+	jr nz, @stage_done
+
+
+
+
+@@next2:
+	xor a
+
+
+
+
+@stage_done:
+	ld (0xc352+@VAR_OFFSET), a
+;;	jr @stage_reset
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@stage_reset:
+	xor a
+
+
+	ld (0xc109+@VAR_OFFSET), a
+	ld (0xc11a+@VAR_OFFSET), a
+	ld (0xc13f+@VAR_OFFSET), a
+
+
+	ld (0xc0f8+@VAR_OFFSET), a	; player frame
+	ld (0xc116+@VAR_OFFSET), a	; player direction
+	ld (0xc118+@VAR_OFFSET), a	; player pose
+
+
+	ld hl, 0xc339+@VAR_OFFSET
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+
+
+	inc a
+	ld (0xc13d+@VAR_OFFSET), a
+	
+
+	call 0x0e5f
+	jp nc, @JMP_DEST
+
+
+
+
+@@stage_select:
+	ld a, 0x03
+	ld (0xc34e+@VAR_OFFSET), a
+
+	jp @JMP_DEST
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_final:
+	jr z, @@ending
+
+
+
+
+@@replay:
+	xor a
+	ld (0xc34e+@VAR_OFFSET), a
+
+	ld hl, 0xc162+@VAR_OFFSET
+
+	ld a, 0x0b			; stage 12
+	ldi (hl), a
+
+	ld a, 0x1f
+	ldi (hl), a
+
+	ld a, 0x0f
+	ldi (hl), a
+
+	ld a, 0x09			; level 10
+	jr @stage_done
+
+
+
+
+
+@@ending:
+	xor a
+	ld (0xc050), a
+
+	inc a
+	ld (0xc179+@VAR_OFFSET), a
+
+	ld a, 0x06
+	ld (0xc34e+@VAR_OFFSET), a
+
+	ld a, 0x10
+	ld (0xc0fe+@VAR_OFFSET), a
+
+	ld a, 0xc3			; keep screen on
+	ldh a, (0x40)
+
+	jp @JMP_DEST+3			; no screen off
+
+
+
+; 36 free
+
+
+freepc REGION2( 0x25aa, 0x235a )

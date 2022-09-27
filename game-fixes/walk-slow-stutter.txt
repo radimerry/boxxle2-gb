@@ -1,0 +1,73 @@
+/*
+update walking frames based on frame timer
+- game would not update movement only when holding d-pad
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x0e73
+	call walk_stutter
+	or a
+	ret z
+
+
+samepc 0x0e78
+
+
+
+
+; ################################################################
+
+
+
+
+org 0x0, 0x0040
+	push af
+	push bc
+	push de
+	push hl
+
+	jp @vblank_isr
+
+
+
+
+; ################################################################
+
+
+
+
+org 0x0, 0x02da
+
+walk_stutter:
+	ldh a, (0x8d)		; if (joypad not pressed)
+	and a, 0xf1
+	ret nz
+
+
+	ld a, (0xc11b+@VAR_OFFSET)	; check movement timer
+	ret
+
+
+	nop
+	nop :: nop
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@vblank_isr:
+	ld a, (0xc10e+@VAR_OFFSET)	; if (oam buffer ready), dma transfer
+	or a
+	jr z, 0x02f3
+
+
+samepc 0x02ec

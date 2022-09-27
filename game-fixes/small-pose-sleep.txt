@@ -1,0 +1,14 @@
+/*
+align sleep sprite to ground level
+*/
+
+
+
+org 0x1, REGION2( 0x6d15, 0x6ce5 )
+	.incbin "small-sleep-mask.bin"
+
+
+
+
+org 0x1, REGION2( 0x7068, 0x7038 )
+	.incbin "small-sleep-gfx.bin"

@@ -1,0 +1,33 @@
+/*
+stop timer irqs from launching during vblank interrupt
+- some vram data not always written to vram due to music engine firing
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, REGION2(0x2814, 0x25e7)
+
+	ld a, 0xc0		; oam dma
+	ldh (0x46), a
+
+
+	ld a, 0x28		; wait
+
+
+
+@oam_dma_wait:
+	dec a
+	jr nz, @oam_dma_wait
+
+
+	ret
+
+
+	nop :: nop		; no reti = avoid timer interrupt interference
+
+
+samepc REGION2( 0x2820, 0x25f3)

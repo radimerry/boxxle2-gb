@@ -1,0 +1,18 @@
+/*
+Reset pending irqs before turning on interrupts
+- music can briefly fast-play glitch or bad vram upload transfers
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x021e
+	call logic_start_ei
+
+
+
+org 0x0, REGION2( 0x33e8, 0x31bb )
+	call stage_clear_ei

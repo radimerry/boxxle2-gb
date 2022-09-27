@@ -1,0 +1,21 @@
+@TYPE1 equ "JAPAN"
+@TYPE2 equ "USA"
+@TYPE3 equ "JAPAN"
+
+
+
+.if REGION == @TYPE1
+	.expfunc REGION2(a,b), a
+	.expfunc REGION3(a,b,c), a
+
+
+.elseif REGION == @TYPE2
+	.expfunc REGION2(a,b), b
+	.expfunc REGION3(a,b,c), b
+
+
+.elseif REGION == @TYPE3
+	.expfunc REGION3(a,b,c), c
+
+
+.endif

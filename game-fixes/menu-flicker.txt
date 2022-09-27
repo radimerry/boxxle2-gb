@@ -1,0 +1,17 @@
+/*
+Screen tends to flicker when closing menus
+
+
+Turn off bg + obj layers to avoid screen flashing effect
+*/
+
+
+
+org 0x0, REGION2( 0x22bf, 0x2062 )
+	and a, 0x80		; lcd on - bg off
+
+
+
+
+org 0x0, 0x0221
+	call mode_oam_clear
