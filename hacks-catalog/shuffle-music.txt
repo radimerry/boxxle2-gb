@@ -1,0 +1,84 @@
+/*
+rotate music tracks after level complete, restart
+*/
+
+
+
+@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, 0x068f
+	call @shuffle_music		; next stage menu
+
+
+
+org 0x0, 0x0272
+	call @shuffle_music		; retry stage menu
+
+
+
+
+; ##################################################################
+
+
+
+
+org 0x0, REGION2( 0x1df1, 0x1b7f )
+	ldh a, (0x8d)			; passkey input
+
+	add a, a			; $80
+	jp c, REGION2( 0x1ed0, 0x1c5e )
+
+	add a, a			; $40
+	jp c, REGION2( 0x1e9e, 0x1c2c )
+
+	add a, a			; $20
+	jr c, REGION2( 0x1e60, 0x1bee )
+
+	add a, a			; $10
+	jr c, REGION2( 0x1e23, 0x1bb1 )
+
+	add a, a			; $08
+
+	add a, a			; $04
+	jp c, REGION2( 0x2043, 0x1ddb )
+
+	add a, a			; $02
+	jp c, REGION2( 0x1f73, 0x1d0b )
+
+	add a, a			; $01
+	jp c, REGION2( 0x1f0b, 0x1c99 )
+
+	jp REGION2( 0x206f, 0x1e07 )
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@shuffle_music:
+	ld (0xc34e+@VAR_OFFSET), a	; menu mode
+
+
+	ld a, (0xc427+@VAR_OFFSET)
+	inc a				; next track
+	cp a, 0x83+1
+	jr c, @@exit
+
+
+	ld a, 0x81			; bgm 1
+
+
+@@exit:
+	ld (0xc427+@VAR_OFFSET), a
+	ret
+
+
+	nop
+
+
+samepc REGIOn2( 0x1e23, 0x1bb1 )

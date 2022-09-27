@@ -1,0 +1,11 @@
+.relativeinclude on
+
+
+
+.if HACK_NAME == "SHUFFLE_MUSIC"
+	.include "shuffle-music.txt"
+.endif
+
+
+
+.relativeinclude off
