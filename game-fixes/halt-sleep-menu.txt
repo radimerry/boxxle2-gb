@@ -1,0 +1,30 @@
+/*
+halt while waiting for menu bgmap to upload
+*/
+
+
+
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, REGION2( 0x25cc, 0x237c )
+	push hl
+
+	ld hl, 0xc133+@VAR_REGION	; menu flag
+	ld a, h
+	ld (hl), a
+
+
+
+@@wait:
+	halt				; not timing critical
+	cp a, (hl)
+	jr z, @@wait
+
+
+	pop hl
+	ret
+
+
+samepc REGION2( 0x25d8, 0x2388 )

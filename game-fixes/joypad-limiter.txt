@@ -10,7 +10,7 @@ joypad sends 1 button press, then must wait for button to release
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -48,7 +48,7 @@ org 0x0, REGION2( 0x303f, 0x2e12 )
 
 
 @joypad_block:
-	ld a, (0xc11d+@VAR_OFFSET)	; if (joypad blocking)
+	ld a, (0xc11d+@VAR_REGION)	; if (joypad blocking)
 	or a
 	ret z
 
@@ -58,7 +58,7 @@ org 0x0, REGION2( 0x303f, 0x2e12 )
 	jr nz, @@reset
 
 
-	ld (0xc11d+@VAR_OFFSET), a	; unblock joypad
+	ld (0xc11d+@VAR_REGION), a	; unblock joypad
 
 
 

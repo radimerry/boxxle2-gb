@@ -4,7 +4,7 @@ holding select will change zoom modes 1-time
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -14,7 +14,7 @@ org 0x0, 0x03d3
 	jr z, 0x03f1
 
 
-	ld (0xc11d+@VAR_OFFSET), a	; start joypad blocking
+	ld (0xc11d+@VAR_REGION), a	; start joypad blocking
 
 
 	jr 0x03e0

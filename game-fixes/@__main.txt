@@ -2,6 +2,7 @@
 
 
 	.include "frame-stutter.txt"
+	.include "halt-sleep.txt"
 	.include "irq-misfire.txt"
 	.include "joypad-limiter.txt"
 	.include "menu-flicker.txt"

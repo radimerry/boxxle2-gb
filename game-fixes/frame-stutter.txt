@@ -11,7 +11,7 @@ stop micro-stutter pauses
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -30,38 +30,42 @@ org 0x0, 0x15b6
 
 bgmap_erase_tile:
 	push hl
-	ld hl, 0xc111+@VAR_OFFSET
+	ld hl, 0xc111+@VAR_REGION
 
 
 
-	ld a, (0xc0f4+@VAR_OFFSET)	; if (old block != new block)
+	ld a, (0xc0f4+@VAR_REGION)	; if (old block != new block)
 	cp (hl)
-	jr nz, @wait_copy
+	jr nz, @@wait_copy
 
 
 
-	ld a, (0xc0f5+@VAR_OFFSET)
+	ld a, (0xc0f5+@VAR_REGION)
 	inc hl
 	cp (hl)
-	jr z, @resume
+	jr z, @@resume
 
 
 
 
-@wait_copy:
-	ld a, (0xc0ab+@VAR_OFFSET)	; wait for old transfer to finish
+@@wait_copy:
+	di
+
+	ld a, (0xc0ab+@VAR_REGION)	; wait for old transfer to finish
 	or a
-	jr nz, @wait_copy
+
+	call nz, halt_wait
+	jr nz, @@wait_copy
 
 
 
 
-@resume:
+@@resume:
 	pop hl
 
 
-	ld a, (0xc0f6+@VAR_OFFSET)
-	ret
+	ld a, (0xc0f6+@VAR_REGION)
+	reti
 
 
 
@@ -76,16 +80,23 @@ mode_oam_clear:
 
 
 	ld a, 0x01		; switching modes = joypad block
-	ld (0xc11d+@VAR_OFFSET), a
+	ld (0xc11d+@VAR_REGION), a
 
 	ret
 
 
 
-	nop :: nop :: nop
-	nop :: nop :: nop
-	nop :: nop :: nop
-	nop
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+frame_wait:
+	xor a			; wait 1 frame
+	ldh (0x93), a
+
+	jp vblank_wait
 
 
 samepc 0x15e5

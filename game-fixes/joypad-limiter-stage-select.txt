@@ -4,7 +4,7 @@ holding select will change stage selection 1-time
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -18,7 +18,7 @@ org 0x0, REGION2( 0x1cce, 0x1a5c )
 
 
 
-	ld a, (0xc351+@VAR_OFFSET)
+	ld a, (0xc351+@VAR_REGION)
 	or a
 	jr z, @@game_stage
 
@@ -38,7 +38,7 @@ org 0x0, REGION2( 0x1cce, 0x1a5c )
 
 
 @@write_stage:
-	ld (0xc352+@VAR_OFFSET), a
+	ld (0xc352+@VAR_REGION), a
 
 
 	jr @@end

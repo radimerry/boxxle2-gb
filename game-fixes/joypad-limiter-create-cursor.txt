@@ -4,7 +4,7 @@ holding select will change create cursor type 1-time
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -17,10 +17,10 @@ org 0x0, 0x1545
 	ret nz
 
 
-	ld a, (0xc0fd+@VAR_OFFSET)	; change cursor
+	ld a, (0xc0fd+@VAR_REGION)	; change cursor
 	inc a
 	and a, 0x03
-	ld (0xc0fd+@VAR_OFFSET), a
+	ld (0xc0fd+@VAR_REGION), a
 
 
 	call 0x1563

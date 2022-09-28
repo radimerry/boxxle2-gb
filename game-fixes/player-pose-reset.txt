@@ -4,7 +4,7 @@ redraw player to initial state after stage clear or reset
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 @JMP_DEST equ REGION2( 0x2482, 0x2232 )		; screen off
 
 
@@ -52,7 +52,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 	call 0x0e5f
 
 
-	ld a, (0xc353+@VAR_OFFSET)	; if (!new game), then skip intro  [select level]
+	ld a, (0xc353+@VAR_REGION)	; if (!new game), then skip intro  [select level]
 	jr nc, @mode_init
 
 
@@ -86,19 +86,19 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @mode_init:
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
 
 
 	ld a, 0x01
-	ld (0xc13d+@VAR_OFFSET), a
+	ld (0xc13d+@VAR_REGION), a
 
 
 	xor a
-	ld (0xc13f+@VAR_OFFSET), a
+	ld (0xc13f+@VAR_REGION), a
 
 
-	ld hl, 0xc350+@VAR_OFFSET
+	ld hl, 0xc350+@VAR_REGION
 	ldi (hl), a
 	ldi (hl), a
 	ldi (hl), a
@@ -107,7 +107,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @mode_start:
-	ld hl, 0xc339+@VAR_OFFSET
+	ld hl, 0xc339+@VAR_REGION
 	ldi (hl), a
 	ldi (hl), a
 	ldi (hl), a
@@ -136,9 +136,9 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @@init:
-	ld (0xc34e+@VAR_OFFSET), a
-	ld (0xc351+@VAR_OFFSET), a
-	ld (0xc13d+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
+	ld (0xc351+@VAR_REGION), a
+	ld (0xc13d+@VAR_REGION), a
 
 
 	pop af
@@ -172,7 +172,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @@create_done:
-	ld (0xc0fe+@VAR_OFFSET), a
+	ld (0xc0fe+@VAR_REGION), a
 
 
 	jp @JMP_DEST
@@ -192,18 +192,18 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @@retry:
-	ld (0xc140+@VAR_OFFSET), a
+	ld (0xc140+@VAR_REGION), a
 
 
-	ld (0xc0f8+@VAR_OFFSET), a	; player frame
-	ld (0xc116+@VAR_OFFSET), a	; player direction
-	ld (0xc118+@VAR_OFFSET), a	; player pose
+	ld (0xc0f8+@VAR_REGION), a	; player frame
+	ld (0xc116+@VAR_REGION), a	; player direction
+	ld (0xc118+@VAR_REGION), a	; player pose
 
 
 	inc a
-	ld (0xc34e+@VAR_OFFSET), a
-	ld (0xc13d+@VAR_OFFSET), a
-	ld (0xc11a+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
+	ld (0xc13d+@VAR_REGION), a
+	ld (0xc11a+@VAR_REGION), a
 
 
 	jp @JMP_DEST
@@ -213,7 +213,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 @stage_select:
 	ld a, 0x03
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
 	jr @stage_reset
 
@@ -229,17 +229,17 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 	jr nz, @stage_select
 
 
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
 
 
-	ld a, (0xc109+@VAR_OFFSET)		; ??
+	ld a, (0xc109+@VAR_REGION)		; ??
 	or a
 	jr nz, @@next2
 
 
 
-	ld a, (0xc352+@VAR_OFFSET)		; bump stage #
+	ld a, (0xc352+@VAR_REGION)		; bump stage #
 	inc a
 	cp a, 0x0a
 	jr nz, @stage_done
@@ -254,7 +254,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 @stage_done:
-	ld (0xc352+@VAR_OFFSET), a
+	ld (0xc352+@VAR_REGION), a
 ;;	jr @stage_reset
 
 
@@ -269,17 +269,17 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 	xor a
 
 
-	ld (0xc109+@VAR_OFFSET), a
-	ld (0xc11a+@VAR_OFFSET), a
-	ld (0xc13f+@VAR_OFFSET), a
+	ld (0xc109+@VAR_REGION), a
+	ld (0xc11a+@VAR_REGION), a
+	ld (0xc13f+@VAR_REGION), a
 
 
-	ld (0xc0f8+@VAR_OFFSET), a	; player frame
-	ld (0xc116+@VAR_OFFSET), a	; player direction
-	ld (0xc118+@VAR_OFFSET), a	; player pose
+	ld (0xc0f8+@VAR_REGION), a	; player frame
+	ld (0xc116+@VAR_REGION), a	; player direction
+	ld (0xc118+@VAR_REGION), a	; player pose
 
 
-	ld hl, 0xc339+@VAR_OFFSET
+	ld hl, 0xc339+@VAR_REGION
 	ldi (hl), a
 	ldi (hl), a
 	ldi (hl), a
@@ -287,7 +287,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 
 	inc a
-	ld (0xc13d+@VAR_OFFSET), a
+	ld (0xc13d+@VAR_REGION), a
 	
 
 	call 0x0e5f
@@ -298,7 +298,7 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 @@stage_select:
 	ld a, 0x03
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
 	jp @JMP_DEST
 
@@ -318,9 +318,9 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 
 @@replay:
 	xor a
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
-	ld hl, 0xc162+@VAR_OFFSET
+	ld hl, 0xc162+@VAR_REGION
 
 	ld a, 0x0b			; stage 12
 	ldi (hl), a
@@ -343,19 +343,39 @@ org 0x0, REGION2( 0x2497, 0x2247 )
 	ld (0xc050), a
 
 	inc a
-	ld (0xc179+@VAR_OFFSET), a
+	ld (0xc179+@VAR_REGION), a
 
 	ld a, 0x06
-	ld (0xc34e+@VAR_OFFSET), a
+	ld (0xc34e+@VAR_REGION), a
 
 	ld a, 0x10
-	ld (0xc0fe+@VAR_OFFSET), a
+	ld (0xc0fe+@VAR_REGION), a
 
 	ld a, 0xc3			; keep screen on
 	ldh a, (0x40)
 
 	jp @JMP_DEST+3			; no screen off
 
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+halt_sleep:
+	ld a, (hl)			; old value
+
+
+@wait:
+	halt				; not timing critical
+	cp a, (hl)
+	jr z, @wait
+
+
+	pop hl
+	ret
 
 
 ; 36 free

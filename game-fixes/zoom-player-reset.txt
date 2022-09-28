@@ -4,12 +4,12 @@ redraw player sprite after changing zoom mode to match old mode
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
 org 0x0, 0x0cdc
-	ld a, (0xc118+@VAR_OFFSET)
+	ld a, (0xc118+@VAR_REGION)
 
 	cp a, 0x10		; 0x = [large] walk
 	jr c, @walk_sprite
@@ -36,7 +36,7 @@ org 0x0, 0x0cdc
 
 
 @save_sprite:
-	ld (0xc0f0+@VAR_OFFSET), a	; save push state
+	ld (0xc0f0+@VAR_REGION), a	; save push state
 
 
 

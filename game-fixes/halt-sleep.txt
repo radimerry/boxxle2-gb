@@ -1,0 +1,7 @@
+/*
+save battery power with cpu halt
+*/
+
+
+	.include "halt-sleep-menu.txt"
+	.include "halt-sleep-music.txt"

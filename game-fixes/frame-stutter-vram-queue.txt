@@ -5,7 +5,7 @@ add items to vblank queue to avoid 1 frame of vblank wait delay
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -40,6 +40,7 @@ org 0x0, REGION2( 0x28e9, 0x26bc )
 
 logic_start_ei:
 	ldh (0x95), a
+
 
 
 stage_clear_ei:

@@ -1,0 +1,37 @@
+/*
+halt while waiting for music to fade-out
+*/
+
+
+
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+
+
+
+org 0x0, REGION2( 0x338a, 0x315d )
+	push hl
+
+	ld hl, 0xc428+@VAR_REGION	; music flag
+
+	jp halt_sleep
+
+
+samepc REGION2( 0x3391, 0x3164 )
+
+
+
+
+; #########################################################
+
+
+
+
+org 0x0, REGION2( 0x3391, 0x3164 )
+	push hl
+
+	ld hl, 0xc42d+@VAR_REGION	; music flag
+
+	jp halt_sleep
+
+
+samepc REGION2( 0x3398, 0x316b )

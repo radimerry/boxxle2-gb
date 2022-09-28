@@ -5,7 +5,7 @@ update walking frames based on frame timer
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -49,7 +49,7 @@ walk_stutter:
 	ret nz
 
 
-	ld a, (0xc11b+@VAR_OFFSET)	; check movement timer
+	ld a, (0xc11b+@VAR_REGION)	; check movement timer
 	ret
 
 
@@ -65,7 +65,7 @@ walk_stutter:
 
 
 @vblank_isr:
-	ld a, (0xc10e+@VAR_OFFSET)	; if (oam buffer ready), dma transfer
+	ld a, (0xc10e+@VAR_REGION)	; if (oam buffer ready), dma transfer
 	or a
 	jr z, 0x02f3
 
