@@ -1,11 +1,26 @@
+.macro hack_build, name, file
+
+
+.if HACK_NAME == name
+	.include file
+.endif
+
+
+.endmacro
+
+
+
+
+; ##############################################################
+
+
+
+
 .relativeinclude on
 
 
-
-.if HACK_NAME == "SHUFFLE_MUSIC"
-	.include "shuffle-music.txt"
-.endif
-
+	hack_build "FASTER_WALK", "faster-walk.txt"
+	hack_build "SHUFFLE_MUSIC", "shuffle-music.txt"
 
 
 .relativeinclude off

@@ -1,0 +1,25 @@
+/*
+raises fps while walking in small mode from 24 fps to 30 / 40 fps
+- warning: install protech bug eraser patch first  [frame-stutter]
+*/
+
+
+
+.if 0
+
+	; 30 fps
+
+	org 0x0, 0x079f
+		nop :: nop :: nop
+
+
+
+.else
+
+	; 40 fps
+
+	org 0x0, 0x0795
+		nop :: nop :: nop
+
+
+.endif

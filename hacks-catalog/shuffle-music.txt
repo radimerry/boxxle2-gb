@@ -4,7 +4,7 @@ rotate music tracks after level complete, restart
 
 
 
-@VAR_OFFSET equ REGION2( -0x18, -0x00 )		; japan, usa / europe
+@VAR_REGION equ REGION2( -0x18, -0x00 )		; japan, usa / europe
 
 
 
@@ -61,10 +61,10 @@ org 0x0, REGION2( 0x1df1, 0x1b7f )
 
 
 @shuffle_music:
-	ld (0xc34e+@VAR_OFFSET), a	; menu mode
+	ld (0xc34e+@VAR_REGION), a	; menu mode
 
 
-	ld a, (0xc427+@VAR_OFFSET)
+	ld a, (0xc427+@VAR_REGION)
 	inc a				; next track
 	cp a, 0x83+1
 	jr c, @@exit
@@ -74,7 +74,7 @@ org 0x0, REGION2( 0x1df1, 0x1b7f )
 
 
 @@exit:
-	ld (0xc427+@VAR_OFFSET), a
+	ld (0xc427+@VAR_REGION), a
 	ret
 
 
